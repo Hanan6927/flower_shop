@@ -18,3 +18,19 @@ export const createFlowerSchema = z.object({
   price: z.number().min(0).positive(),
   image_url: z.string(),
 });
+
+export const createUserSchema = z.object({
+  username: z.string().min(1).catch("This must be unique"),
+  password: z.string().min(6),
+  email: z.string().email(),
+  phone: z.string().max(20).optional(),
+  address: z.string().optional(),
+});
+
+export const updateUserSchema = z.object({
+  username: z.string().min(1).optional(),
+  password: z.string().min(6).optional(),
+  email: z.string().email().optional(),
+  phone: z.string().max(20).optional(),
+  address: z.string().optional(),
+});
