@@ -34,3 +34,18 @@ export const updateUserSchema = z.object({
   phone: z.string().max(20).optional(),
   address: z.string().optional(),
 });
+
+
+// Define a schema for the Order model
+export const createOrderSchema = z.object({
+  user_id: z.number(),
+  total_amount: z.number(),
+  status: z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED']),
+});
+
+// Define an optional schema for updating orders
+export const updateOrderSchema = z.object({
+  user_id: z.optional(z.number()),
+  total_amount: z.optional(z.number()),
+  status: z.optional(z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED'])),
+});

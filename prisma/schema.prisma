@@ -21,7 +21,7 @@ model User {
   role       Role
   phone      String?   @db.VarChar(20)
   address    String?   @db.Text
-  orders     Order[]
+  orders     Order[]   
   cartItems  Cart[]
 }
 
@@ -47,7 +47,7 @@ model Flower {
 
 model Order {
   order_id    Int       @id @default(autoincrement())
-  user_id     Int
+  user_id     Int       
   order_date  DateTime  @default(now())
   total_amount Float
   status      OrderStatus @default(PENDING)

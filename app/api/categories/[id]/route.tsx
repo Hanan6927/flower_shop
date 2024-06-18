@@ -110,9 +110,6 @@ export async function DELETE(
 
     const category = await prisma.category.findUnique({
       where: { category_id: categoryId },
-      include: {
-        flowers: true, // Include the related flowers in the response
-      },
     });
 
     if (!category) {
@@ -121,7 +118,9 @@ export async function DELETE(
         { status: 404 }
       );
     }
-
+    await prisma.flower.deleteMany({
+      where: { category_id: parseInt(id, 10) },
+    });
     const updatedCategory = await prisma.category.delete({
       where: { category_id: categoryId },
     });
