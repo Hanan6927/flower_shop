@@ -80,6 +80,9 @@ export async function DELETE(
     await prisma.order.deleteMany({
       where: { user_id: id },
     });
+    await prisma.cart.deleteMany({
+      where: { user_id: id },
+    });
     await prisma.user.delete({ where: { user_id: id } });
 
     return NextResponse.json(

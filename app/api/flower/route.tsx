@@ -57,6 +57,10 @@ export const POST = async (req: any, res: any) => {
           price: body.price,
           image_url: `/uploads/${filename}`,
         },
+        include: {
+          orderItems: true,
+          cartItems: true,
+        },
       });
 
       // Updating the category to include the new flower
@@ -67,12 +71,9 @@ export const POST = async (req: any, res: any) => {
             connect: { flower_id: newFlower.flower_id }, // Connecting the new flower to the category
           },
         },
-        include: {
-          flowers: true, // Including the flowers in the response
-        },
       });
 
-      return { newFlower, updatedCategory };
+      return { newFlower };
     });
 
     return NextResponse.json(result, { status: 201 });
@@ -83,14 +84,19 @@ export const POST = async (req: any, res: any) => {
 };
 
 export const GET = async (req: NextRequest) => {
-  const flowers = await prisma.flower.findMany();
+  const flowers = await prisma.flower.findMany({
+    include: {
+      orderItems: true,
+      cartItems: true,
+    },
+  });
   return NextResponse.json(flowers, { status: 200 });
 };
 
 export const DELETE = async (req: NextRequest) => {
   try {
     const deletedFlowers = await prisma.flower.deleteMany({});
-    return NextResponse.json(null, { status: 200 });
+    return NextResponse.json(deletedFlowers, { status: 200 });
   } catch (error) {
     console.error("Error deleting flowers:", error);
     return NextResponse.json(

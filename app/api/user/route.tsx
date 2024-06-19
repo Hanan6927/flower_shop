@@ -39,3 +39,22 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    await prisma.order.deleteMany({}), 
+    await prisma.cart.deleteMany({}), 
+    await prisma.user.deleteMany({});
+    
+    return NextResponse.json(
+      { message: "Users deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting flowers and categories:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

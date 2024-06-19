@@ -107,7 +107,7 @@ export async function DELETE(
         { status: 400 }
       );
     }
-
+    
     const category = await prisma.category.findUnique({
       where: { category_id: categoryId },
     });
@@ -119,12 +119,12 @@ export async function DELETE(
       );
     }
     await prisma.flower.deleteMany({
-      where: { category_id: parseInt(id, 10) },
+      where: { category_id: categoryId },
     });
     const updatedCategory = await prisma.category.delete({
       where: { category_id: categoryId },
     });
-    return NextResponse.json(null, { status: 200 });
+    return NextResponse.json(updatedCategory, { status: 200 });
   } catch (error) {
     console.error("Error fetching category:", error);
     return NextResponse.json(

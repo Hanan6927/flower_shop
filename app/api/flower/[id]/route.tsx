@@ -22,6 +22,10 @@ export async function GET(
 
     const flower = await prisma.flower.findUnique({
       where: { flower_id: flowerId },
+      include: {
+        orderItems: true,
+        cartItems: true,
+      },
     });
 
     if (!flower) {

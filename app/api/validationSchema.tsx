@@ -49,3 +49,16 @@ export const updateOrderSchema = z.object({
   total_amount: z.optional(z.number()),
   status: z.optional(z.enum(['PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED'])),
 });
+
+export const createOrderItemSchema = z.object({
+  order_id: z.number(),
+  flower_id: z.number(),
+  quantity: z.number().optional(),
+  price: z.number(),
+});
+
+export const createCartSchema = z.object({
+  user_id: z.number(),
+  flower_id: z.number(),
+  quantity: z.number().min(1),
+});

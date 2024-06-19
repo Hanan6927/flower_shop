@@ -13,6 +13,9 @@ export async function POST(request: NextRequest) {
       name: body.name,
       description: body.description,
     },
+    include: {
+      flowers: true,
+    },
   });
 
   return NextResponse.json(newCategory, { status: 201 });
@@ -29,10 +32,20 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    // Deleting all flowers
+    const deletedFlowers = await prisma.flower.deleteMany({});
+    console.log("Deleted flowers:", deletedFlowers);
+
+    // Deleting all categories
     const updatedCategory = await prisma.category.deleteMany({});
-    return NextResponse.json(null, { status: 200 });
+    console.log("Deleted categories:", updatedCategory);
+
+    return NextResponse.json(
+      { message: "All flowers and categories deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error fetching category:", error);
+    console.error("Error deleting flowers and categories:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
