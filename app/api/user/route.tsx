@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createUserSchema } from "../validationSchema";
 import prisma from "@/prisma/client";
+import bcrypt from "bcryptjs";
+import { signToken } from "@/app/utils/jwt";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -8,18 +10,21 @@ export async function POST(req: NextRequest) {
 
   if (!validation.success)
     return NextResponse.json(validation.error.errors, { status: 400 });
+
   try {
+    const hashedPassword = await bcrypt.hash(body.password, 10);
     const newUser = await prisma.user.create({
       data: {
         username: body.username,
-        password: body.password,
+        password: hashedPassword,
         email: body.email,
         role: "BUYER",
         phone: body.phone,
         address: body.address,
       },
     });
-    return NextResponse.json(newUser, { status: 201 });
+    const token = signToken({ userId: newUser.user_id, role: newUser.role });
+    return NextResponse.json({ token }, { status: 201 });
   } catch (error) {
     return NextResponse.json(error, { status: 400 });
   }
@@ -42,10 +47,10 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    await prisma.order.deleteMany({}), 
-    await prisma.cart.deleteMany({}), 
-    await prisma.user.deleteMany({});
-    
+    await prisma.order.deleteMany({}),
+      await prisma.cart.deleteMany({}),
+      await prisma.user.deleteMany({});
+
     return NextResponse.json(
       { message: "Users deleted successfully" },
       { status: 200 }
