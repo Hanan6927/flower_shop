@@ -6,6 +6,7 @@ export const createCategorySchema = z.object({
     .min(1, "category name is required")
     .max(255, "too long category name"),
   description: z.string().min(1, "description is required"),
+  image_url: z.string().optional(),
 });
 
 export const createFlowerSchema = z.object({
