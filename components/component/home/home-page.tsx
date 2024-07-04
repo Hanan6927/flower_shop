@@ -35,22 +35,17 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "../layout/header";
 import BestSellers from "./bestSellers";
-import OneCategory from "./oneFlower";
+import OneCategory from "./oneCategory";
 import ShopByOccasion from "./shopByOccasion";
+import HeroSection from "./heroSection";
 
 export function HomePage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <img
-        src="/placeholder.svg"
-        alt="Flower Carousel 1"
-        width={1920}
-        height={1080}
-        className="object-cover w-full h-96"
-      />
+      <HeroSection />
       <div className="bg-muted py-4 md:py-6 lg:py-8">
         <div className="container justify-around flex grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex flex-col items-center gap-2 md:gap-3">
             <TruckIcon className="w-6 h-6 md:w-8 md:h-8" />
             <div>
               <h3 className="text-sm md:text-base font-medium">
@@ -61,7 +56,7 @@ export function HomePage() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex flex-col items-center gap-2 md:gap-3">
             <LockIcon className="w-6 h-6 md:w-8 md:h-8" />
             <div>
               <h3 className="text-sm md:text-base font-medium">Safe Payment</h3>
@@ -70,7 +65,7 @@ export function HomePage() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex flex-col items-center gap-2 md:gap-3">
             <UsersIcon className="w-6 h-6 md:w-8 md:h-8" />
             <div>
               <h3 className="text-sm md:text-base font-medium">
@@ -85,7 +80,7 @@ export function HomePage() {
       </div>
       <BestSellers />
       <OneCategory />
-      <ShopByOccasion/>
+      <ShopByOccasion />
     </div>
   );
 }
