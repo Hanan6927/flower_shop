@@ -31,7 +31,30 @@ body {
     text-wrap: balance;
   }
 } */
+/* body {
+  background: gray;
+} */
 .text-shadow {
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
+.card-style {
+  border-radius: 1em;
+}
+
+.footer {
+  background-color: #ebebe0;
+}
+
+.one-category {
+  background-color: rgba(40, 50, 50, 0.7);
+  color: white;
+}
+
+.div-style {
+  border-radius: 4em;
+}
+
+.nav-style {
+  background-color: white;
+}

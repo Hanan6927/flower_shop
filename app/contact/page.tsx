@@ -1,9 +1,8 @@
-import React from 'react'
+import ContactPage from "@/components/component/contact/contact";
+import React from "react";
 
 const Contact = () => {
-  return (
-    <div>Contact</div>
-  )
-}
+  return <ContactPage />;
+};
 
-export default Contact
+export default Contact;

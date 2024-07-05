@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Flower } from "@/app/types/flower";
 
-
 const BestSellers = () => {
   const [flowers, setFlowers] = useState<Flower[]>([]);
 
@@ -29,12 +28,15 @@ const BestSellers = () => {
           Best Sellers
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3 lg:gap-4 p-4">
-          {flowers.map((flower) => (
-            <Card key={flower.flower_id} className="rounded-lg overflow-hidden">
+          {flowers.slice(0, 4).map((flower) => (
+            <Card
+              key={flower.flower_id}
+              className="rounded-lg overflow-hidden card-style"
+            >
               <img
                 src={flower.image_url || "/placeholder.svg"}
                 alt={flower.name}
-                className="w-full h-48 object-cover rounded-t-lg"
+                className="w-full h-48 object-cover rounded-t-lg card-style"
               />
               <CardContent className="p-4">
                 <h3 className="text-lg font-medium">{flower.name}</h3>
