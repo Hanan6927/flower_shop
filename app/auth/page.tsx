@@ -128,7 +128,7 @@ const Auth = () => {
       const data = response.data;
       localStorage.setItem("token", data.token);
       alert("Registration successful");
-      router.push("/"); // Redirect to home page after successful registration
+      router.push("/");
     } catch (error) {
       console.error("Error:", error);
       alert("Registration failed");
@@ -147,15 +147,17 @@ const Auth = () => {
 
       const data = response.data;
       localStorage.setItem("token", data.token);
-      console.log(data.token);
       alert("Login successful");
-      router.push("/"); // Redirect to home page after successful login
+      // Redirect to home page after successful login
+      router.push("/");
+
+      // Reload the home page to reflect the updated authentication state
+      // window.location.reload();
     } catch (error) {
       console.error("Error:", error);
       alert("Login failed");
     }
   };
-
   return (
     <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md space-y-8">
@@ -304,7 +306,7 @@ const Auth = () => {
     </div>
   );
 };
-
+export default Auth;
 function ChromeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -327,5 +329,3 @@ function ChromeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-export default Auth;

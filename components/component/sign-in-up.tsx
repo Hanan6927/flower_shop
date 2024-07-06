@@ -117,6 +117,7 @@ export function SignInUP() {
 
       const data = response.data;
       localStorage.setItem("token", data.token);
+      window.dispatchEvent(new Event("userSignedIn"));
       alert("Registration successful");
       router.push("/"); // Redirect to home page after successful registration
     } catch (error) {

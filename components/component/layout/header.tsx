@@ -1,9 +1,14 @@
-// Header.tsx
-import React, { useEffect, useState } from "react";
+// components/layout/Header.tsx
+"use client";
+// components/layout/Header.tsx
+
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
-import jwtDecode, { JwtPayload } from "jwt-decode";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "@/app/utils/authContext";
 
 // Define the User type
 interface User {
@@ -11,30 +16,53 @@ interface User {
   // Add other user properties here as needed
 }
 
-const Header: React.FC = () => {
+// Define the JWT token type
+interface JwtToken {
+  userId: string;
+  // Add other JWT token properties here as needed
+}
+
+const Header = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const tokenFromStorage = localStorage.getItem("token");
+
+    if (tokenFromStorage) {
       try {
-        const decodedToken = jwtDecode<JwtPayload>(token);
-        setUser({ username: decodedToken.username });
+        const decodedToken = jwtDecode<JwtToken>(tokenFromStorage);
+        fetchUserData(decodedToken.userId);
       } catch (error) {
         console.error("Error decoding token:", error);
-        localStorage.removeItem("token");
-        setUser(null);
+        handleLogout(); // Clear user state and token on decoding error
       }
     } else {
-      setUser(null);
+      setUser(null); // Clear user state if no token is present
     }
   }, []);
 
+  const fetchUserData = async (userId: string) => {
+    try {
+      const response = await axios.get(`/api/user/${userId}`);
+      setUser(response.data); // Assuming the response returns user data
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      handleLogout(); // Clear user state and token on fetch error
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    router.push("/");
+  };
+
   return (
-    <header className="flex items-center h-16 px-4 md:px-6 border-b sticky top-0 z-50 bg-white">
+    <header className="flex items-center h-16 px-4 md:px-6 border-b sticky top-0 nav-style z-50 bg-white">
       <Link href="/" className="flex items-center" prefetch={false}>
-        <FlowerIcon className="h-6 w-6" />
+        <FlowerIcon />
         <span className="sr-only">Bloom Blossoms</span>
       </Link>
       <nav className="hidden md:flex items-center gap-6 text-sm font-medium ml-auto">
@@ -55,31 +83,30 @@ const Header: React.FC = () => {
         </NavLink>
       </nav>
       <div className="ml-auto flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <SearchIcon className="h-5 w-5" />
-          <span className="sr-only">Search</span>
-        </Button>
         {user ? (
           <>
             <Button variant="ghost" size="icon" className="rounded-full">
               <Link href="/cart">
-                <CartIcon className="h-5 w-5" />
+                <CartIcon />
                 <span className="sr-only">Cart</span>
               </Link>
             </Button>
             <div className="flex items-center gap-2">
               <span>{user.username}</span>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Link href="/profile">
-                  <UserIcon className="h-5 w-5" />
-                  <span className="sr-only">Profile</span>
-                </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+                onClick={handleLogout}
+              >
+                Logout
               </Button>
             </div>
           </>
         ) : (
           <Button variant="ghost" size="icon" className="rounded-full">
             <Link href="/auth">
+              {/* Ensure UserIcon is properly imported and used */}
               <UserIcon className="h-5 w-5" />
               <span className="sr-only">Sign In</span>
             </Link>
@@ -134,26 +161,6 @@ function FlowerIcon(props) {
       <path d="M14.12 9.88 16 8" />
       <path d="m8 16 1.88-1.88" />
       <path d="M14.12 14.12 16 16" />
-    </svg>
-  );
-}
-
-function SearchIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
     </svg>
   );
 }
