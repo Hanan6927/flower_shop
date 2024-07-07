@@ -58,3 +58,8 @@ body {
 .nav-style {
   background-color: white;
 }
+
+.black-bg {
+  background-color: black;
+  color: white;
+}

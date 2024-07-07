@@ -4,9 +4,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Flower } from "@/app/types/flower";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+
+// Define the User type
+interface User {
+  username: string;
+  // Add other user properties here as needed
+}
+
+// Define the JWT token type
+interface JwtToken {
+  userId: string;
+  // Add other JWT token properties here as needed
+}
 
 const BestSellers = () => {
   const [flowers, setFlowers] = useState<Flower[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchFlowers = async () => {
@@ -19,7 +35,44 @@ const BestSellers = () => {
     };
 
     fetchFlowers();
+
+    const tokenFromStorage = localStorage.getItem("token");
+    if (tokenFromStorage) {
+      try {
+        const decodedToken = jwtDecode<JwtToken>(tokenFromStorage);
+        fetchUserData(decodedToken.userId);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        handleLogout();
+      }
+    } else {
+      setUser(null);
+    }
   }, []);
+
+  const fetchUserData = async (userId: string) => {
+    try {
+      const response = await axios.get(`/api/user/${userId}`);
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      handleLogout();
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    router.push("/");
+  };
+
+  const handleAddToCart = () => {
+    if (user) {
+      router.push("/cart");
+    } else {
+      router.push("/auth?redirect=/cart");
+    }
+  };
 
   return (
     <section className="py-12 md:py-16 lg:py-20">
@@ -47,8 +100,13 @@ const BestSellers = () => {
                   <span className="text-lg font-medium">
                     ${flower.price.toFixed(2)}
                   </span>
-                  <Button variant="ghost" size="icon">
-                    <PlusIcon className="w-5 h-5" />
+                  <Button
+                    className="bg-black text-white px-4 py-2 rounded-lg flex items-center black-bg"
+                    variant="outline"
+                    onClick={handleAddToCart}
+                  >
+                    <PlusIcon className="w-5 h-5 mr-2" />
+                    Add to Cart
                   </Button>
                 </div>
               </CardContent>

@@ -8,10 +8,13 @@ import Select from "react-select";
 import Link from "next/link";
 import axios from "axios";
 import { fetchCountries } from "@/app/utils/fetchCountries";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Auth = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
   interface Country {
     cca2: string;
     idd?: {
@@ -149,7 +152,7 @@ const Auth = () => {
       localStorage.setItem("token", data.token);
       alert("Login successful");
       // Redirect to home page after successful login
-      router.push("/");
+      router.push(redirect);
 
       // Reload the home page to reflect the updated authentication state
       // window.location.reload();
@@ -171,15 +174,12 @@ const Auth = () => {
         </div>
         <div className="space-y-6">
           <div>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full black-bg">
               <ChromeIcon className="mr-2 h-5 w-5" />
               Sign in with Google
             </Button>
           </div>
           <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-muted" />
-            </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-background px-2 text-muted-foreground">
                 Or continue with
@@ -257,7 +257,7 @@ const Auth = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full black-bg">
                   Sign up
                 </Button>
               </form>
@@ -295,7 +295,11 @@ const Auth = () => {
                     Forgot password?
                   </Link>
                 </div>
-                <Button type="submit" className="w-full">
+                <Button
+                  variant="outline"
+                  type="submit"
+                  className="w-full black-bg"
+                >
                   Sign in
                 </Button>
               </form>
