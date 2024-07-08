@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createUserSchema } from "../validationSchema";
 import prisma from "@/prisma/client";
 import bcrypt from "bcryptjs";
-import { signToken } from "@/app/utils/jwt";
+import { signToken, verifyToken } from "@/app/utils/jwt";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

@@ -39,6 +39,7 @@ import OneCategory from "./oneCategory";
 import ShopByOccasion from "./shopByOccasion";
 import HeroSection from "./heroSection";
 
+
 export function HomePage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">

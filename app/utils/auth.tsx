@@ -1,4 +1,3 @@
-// utils/auth.ts
 
 
 // export const getUserIdFromToken = (token: string): string | null => {

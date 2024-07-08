@@ -33,7 +33,11 @@ export async function POST(req: NextRequest) {
 }
 
 export const GET = async (req: NextRequest) => {
-  const carts = await prisma.cart.findMany();
+  const carts = await prisma.cart.findMany({
+    include: {
+      flower: true,
+    },
+  });
   return NextResponse.json(carts, { status: 200 });
 };
 

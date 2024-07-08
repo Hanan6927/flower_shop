@@ -1,96 +1,62 @@
+"use client";
+import { Category } from "@/app/types/category";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const ShopByOccasion = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/categories"
+        );
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <section className="py-12 md:py-16 lg:py-20">
       <div className="container">
         <h2 className="text-2xl text-center md:text-3xl lg:text-4xl font-bold mb-8 md:mb-10 lg:mb-12">
           Shop by Occasion
         </h2>
-        <div className="flex justify-around p-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          <Card className="rounded-lg overflow-hidden">
-            <img
-              src="/placeholder.svg"
-              alt="Flower 1"
-              width={500}
-              height={500}
-              className="w-full h-48 object-cover"
-            />
-            <CardContent className="p-4">
-              <h3 className="text-lg font-medium">Birthday</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Celebrate with a vibrant bouquet of flowers.
-              </p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-lg font-medium">$39.99</span>
-                <Button variant="ghost" size="icon">
-                  <PlusIcon className="w-5 h-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="rounded-lg overflow-hidden">
-            <img
-              src="/placeholder.svg"
-              alt="Flower 2"
-              width={500}
-              height={500}
-              className="w-full h-48 object-cover"
-            />
-            <CardContent className="p-4">
-              <h3 className="text-lg font-medium">Anniversary</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Show your love with a timeless bouquet.
-              </p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-lg font-medium">$49.99</span>
-                <Button variant="ghost" size="icon">
-                  <PlusIcon className="w-5 h-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="rounded-lg overflow-hidden">
-            <img
-              src="/placeholder.svg"
-              alt="Flower 3"
-              width={500}
-              height={500}
-              className="w-full h-48 object-cover"
-            />
-            <CardContent className="p-4">
-              <h3 className="text-lg font-medium">Sympathy</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Express your condolences with a thoughtful bouquet.
-              </p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-lg font-medium">$59.99</span>
-                <Button variant="ghost" size="icon">
-                  <PlusIcon className="w-5 h-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="rounded-lg overflow-hidden">
-            <img
-              src="/placeholder.svg"
-              alt="Flower 4"
-              width={500}
-              height={500}
-              className="w-full h-48 object-cover"
-            />
-            <CardContent className="p-4">
-              <h3 className="text-lg font-medium">Valentine's Day</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                Celebrate love with a romantic bouquet.
-              </p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="" />
-              </div>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+          {categories.map((category) => (
+            <Card
+              key={category.category_id}
+              className="rounded-lg overflow-hidden"
+            >
+              <img
+                src={category.image_url || "/placeholder.svg"}
+                alt={category.name}
+                width={500}
+                height={500}
+                className="w-full h-48 object-cover"
+              />
+              <CardContent className="p-4">
+                <h3 className="text-lg font-medium">{category.name}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {category.description || "No description available."}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
