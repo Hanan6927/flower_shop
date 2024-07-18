@@ -11,6 +11,7 @@ const GalleryPage = () => {
     const [flowers, setFlowers] = useState<Flower[]>([]);
 
     useEffect(() => {
+
       const fetchFlowers = async () => {
         try {
           const response = await axios.get("http://localhost:3000/api/flower");

@@ -1,8 +1,7 @@
-// src/components/SignInUP.tsx
+// app/auth/AuthForm.tsx
 
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUser } from '@/store/slices/authSlice'; // Adjust path as per your project structure
 import axios from 'axios';
 
 interface FormData {
@@ -13,7 +12,7 @@ interface FormData {
   password: string;
 }
 
-export function SignInUP() {
+const AuthForm = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FormData>({
     username: '',
@@ -32,7 +31,7 @@ export function SignInUP() {
       if (response.status === 201) {
         const data = response.data;
         localStorage.setItem("token", data.token);
-        dispatch(setUser(data.user)); // Dispatch action to update user state
+        dispatch({ type: 'SET_USER', payload: data.user }); // Replace with your actual action
         alert("Registration successful");
         // Redirect or update UI as needed
       } else {
@@ -53,7 +52,7 @@ export function SignInUP() {
       if (response.status === 200) {
         const data = response.data;
         localStorage.setItem("token", data.token);
-        dispatch(setUser(data.user)); // Dispatch action to update user state
+        dispatch({ type: 'SET_USER', payload: data.user }); // Replace with your actual action
         alert("Login successful");
         // Redirect or update UI as needed
       } else {
@@ -77,51 +76,7 @@ export function SignInUP() {
           Sign Up or Sign In
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            id="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            placeholder="Username"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
-          <input
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="Email"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
-          <input
-            type="tel"
-            id="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-            placeholder="Phone"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
-          <input
-            type="text"
-            id="address"
-            value={formData.address}
-            onChange={handleInputChange}
-            placeholder="Address"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
-          <input
-            type="password"
-            id="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Password"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
+          {/* Input fields and form elements */}
           <button
             type="submit"
             className="w-full py-3 bg-blue-500 text-white rounded-lg focus:outline-none hover:bg-blue-600"
@@ -131,24 +86,7 @@ export function SignInUP() {
         </form>
         <hr className="my-6 border-gray-300 w-full" />
         <form onSubmit={handleSignIn} className="space-y-4">
-          <input
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="Email"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
-          <input
-            type="password"
-            id="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Password"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-            required
-          />
+          {/* Input fields and form elements */}
           <button
             type="submit"
             className="w-full py-3 bg-blue-500 text-white rounded-lg focus:outline-none hover:bg-blue-600"
@@ -159,4 +97,6 @@ export function SignInUP() {
       </div>
     </div>
   );
-}
+};
+
+export default AuthForm;

@@ -1,46 +1,52 @@
+'use client'
 // utils/authContext.tsx
-"use client";
-import React, { createContext, useContext, useState } from "react";
-
-// Define types/interfaces for User, AuthContext, etc.
-interface User {
-  username: string;
-  // Define other properties as needed
-}
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
-  isAuthenticated: boolean;
-  user: User | null;
-  login: (userData: User) => void;
+  authToken: string | null;
+  login: (token: string) => void;
   logout: () => void;
 }
-const AuthContext = createContext<any>(null);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const login = (userData: User) => {
-    setUser(userData);
-    setIsAuthenticated(true);
-  };
-
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
-      {children} {/* Ensure children are properly passed through */}
-    </AuthContext.Provider>
-  );
-};
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [authToken, setAuthToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setAuthToken(token);
+    }
+  }, []);
+
+  const login = (token: string) => {
+    localStorage.setItem('token', token);
+    setAuthToken(token);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setAuthToken(null);
+  };
+
+  const authContextValue: AuthContextType = {
+    authToken,
+    login,
+    logout,
+  };
+
+  return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
 };

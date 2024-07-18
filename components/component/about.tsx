@@ -40,7 +40,7 @@ export function About() {
             <div className="bg-muted rounded-lg p-6">
               <p className="text-muted-foreground md:text-xl">
                 At Blooming Blossoms, our mission is to bring joy and beauty
-                into people's lives through the power of flowers. We are
+                into people lives through the power of flowers. We are
                 dedicated to sourcing the finest, freshest blooms and delivering
                 them with the utmost care and attention to detail.
               </p>

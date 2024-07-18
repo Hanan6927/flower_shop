@@ -18,6 +18,8 @@ const ContactPage: React.FC = () => {
     message: "",
   });
 
+  const [responseMessage, setResponseMessage] = useState("");
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -25,10 +27,19 @@ const ContactPage: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData);
+
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+    setResponseMessage(result.message || 'Something went wrong, please try again.');
   };
 
   return (
@@ -41,7 +52,7 @@ const ContactPage: React.FC = () => {
           <MapContainer
             center={[9.026, 38.7439]}
             zoom={13}
-            class   Name="w-full h-full rounded-lg shadow-md"
+            className="w-full h-full rounded-lg shadow-md"
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -114,6 +125,7 @@ const ContactPage: React.FC = () => {
               </button>
             </div>
           </form>
+          {responseMessage && <p className="mt-4 text-green-500">{responseMessage}</p>}
         </div>
       </div>
     </div>
